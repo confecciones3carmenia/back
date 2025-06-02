@@ -10,23 +10,41 @@ export class GarmentsService {
   constructor(
     @InjectModel(Garment.name) private readonly garmentModel: Model<Garment>,
   ) {}
-  create(createGarmentDto: CreateGarmentDto) {
-    return this.garmentModel.create(createGarmentDto);
+  async create(createGarmentDto: CreateGarmentDto) {
+    return await this.garmentModel.create(createGarmentDto);
   }
 
-  findAll() {
-    return this.garmentModel.find();
+  async createMany(createGarmentDtos: CreateGarmentDto[]) {
+    const seenCodes = new Set<string>();
+    const uniqueGarments: CreateGarmentDto[] = [];
+
+    for (const dto of createGarmentDtos) {
+      if (dto.code && !seenCodes.has(dto.code)) {
+        seenCodes.add(dto.code);
+        uniqueGarments.push(dto);
+      }
+    }
+
+    if (uniqueGarments.length === 0) {
+      return [];
+    }
+
+    return await this.garmentModel.insertMany(uniqueGarments);
   }
 
-  findOne(id: Types.ObjectId) {
-    return this.garmentModel.findById(id);
+  async findAll() {
+    return await this.garmentModel.find();
   }
 
-  update(id: Types.ObjectId, updateGarmentDto: UpdateGarmentDto) {
-    return this.garmentModel.findByIdAndUpdate(id, updateGarmentDto);
+  async findOne(id: Types.ObjectId) {
+    return await this.garmentModel.findById(id);
   }
 
-  remove(id: Types.ObjectId) {
-    return this.garmentModel.findByIdAndDelete(id);
+  async update(id: Types.ObjectId, updateGarmentDto: UpdateGarmentDto) {
+    return await this.garmentModel.findByIdAndUpdate(id, updateGarmentDto);
+  }
+
+  async remove(id: Types.ObjectId) {
+    return await this.garmentModel.findByIdAndDelete(id);
   }
 }

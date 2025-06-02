@@ -22,6 +22,11 @@ export class GarmentsController {
     return this.garmentsService.create(createGarmentDto);
   }
 
+  @Post('bulk')
+  createMany(@Body() createGarmentDto: CreateGarmentDto[]) {
+    return this.garmentsService.createMany(createGarmentDto);
+  }
+
   @Get()
   findAll() {
     return this.garmentsService.findAll();

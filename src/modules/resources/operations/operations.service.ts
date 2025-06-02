@@ -15,6 +15,24 @@ export class OperationsService {
     return await this.operationModel.create(createOperationDto);
   }
 
+  async createMany(createOperationDto: CreateOperationDto[]) {
+    const seenCodes = new Set<string>();
+    const uniqueOperations: CreateOperationDto[] = [];
+
+    for (const dto of createOperationDto) {
+      if (dto.code && !seenCodes.has(dto.code)) {
+        seenCodes.add(dto.code);
+        uniqueOperations.push(dto);
+      }
+    }
+
+    if (uniqueOperations.length === 0) {
+      return [];
+    }
+
+    return await this.operationModel.insertMany(uniqueOperations);
+  }
+
   async findAll() {
     return await this.operationModel.find();
   }

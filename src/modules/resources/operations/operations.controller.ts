@@ -22,6 +22,11 @@ export class OperationsController {
     return this.operationsService.create(createOperationDto);
   }
 
+  @Post('bulk')
+  createMany(@Body() createOperationDto: CreateOperationDto[]) {
+    return this.operationsService.createMany(createOperationDto);
+  }
+
   @Get()
   findAll() {
     return this.operationsService.findAll();

@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  ValidationPipe,
 } from '@nestjs/common';
 import { TimesService } from './times.service';
 import { CreateTimeDto } from './dto/create-time.dto';
@@ -20,6 +21,14 @@ export class TimesController {
   @Post()
   create(@Body() createTimeDto: CreateTimeDto) {
     return this.timesService.create(createTimeDto);
+  }
+
+  @Post('bulk')
+  bulkCreate(
+    @Body(new ValidationPipe({ transform: true }))
+    createTimeDtos: CreateTimeDto[],
+  ) {
+    return this.timesService.bulkCreate(createTimeDtos);
   }
 
   @Get()

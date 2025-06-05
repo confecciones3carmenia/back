@@ -32,4 +32,14 @@ export class TimesService {
   async remove(id: Types.ObjectId) {
     return await this.timeModel.findByIdAndDelete(id);
   }
+
+  async bulkCreate(createTimeDtos: CreateTimeDto[]) {
+    try {
+      const result = await this.timeModel.insertMany(createTimeDtos);
+      return result;
+    } catch (error) {
+      console.error('Error during bulk insert of times:', error);
+      throw error;
+    }
+  }
 }
